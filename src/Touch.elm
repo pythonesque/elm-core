@@ -13,7 +13,8 @@ include gestures that would be useful for both games and web-pages.
 @docs taps
 -}
 
-import Signal (Signal)
+import Varying (Varying)
+import Stream (Stream)
 import Native.Touch
 import Time (Time)
 
@@ -25,20 +26,24 @@ A touch also keeps info about the initial point and time of contact:
 like taps, drags, and swipes which need to know about timing or direction.
 -}
 type alias Touch =
-    { x:Int
-    , y:Int
-    , id:Int
-    , x0:Int
-    , y0:Int
-    , t0:Time
+    { x : Int
+    , y : Int
+    , id : Int
+    , x0 : Int
+    , y0 : Int
+    , t0 : Time
     }
 
 {-| A list of ongoing touches. -}
-touches : Signal (List Touch)
-touches = Native.Touch.touches
+touches : Varying (List Touch)
+touches =
+  Native.Touch.touches
 
-{-| The last position that was tapped. Default value is `{x=0,y=0}`.
-Updates whenever the user taps the screen.
+
+{-| Triggers whenever the user taps the screen, showing the position of the
+tap.
 -}
-taps : Signal { x:Int, y:Int }
-taps = Native.Touch.taps
+taps : Stream (Int,Int)
+taps =
+  Native.Touch.taps
+

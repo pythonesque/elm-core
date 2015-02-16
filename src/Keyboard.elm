@@ -2,7 +2,8 @@ module Keyboard
     ( KeyCode
     , arrows, wasd, directions
     , enter, space, ctrl, shift, alt, meta
-    , isDown, keysDown, lastPressed
+    , isDown, keysDown
+    , presses, downs, ups
     ) where
 
 {-| Library for working with keyboard input.
@@ -27,17 +28,21 @@ otherwise.
 import Signal (Signal)
 import Native.Keyboard
 
+
 {-| Type alias to make it clearer what integers are supposed to represent
 in this library. Use `Char.toCode` and `Char.fromCode` to convert key codes
 to characters. Use the uppercase character with `toCode`.
 -}
 type alias KeyCode = Int
 
+
 {-| Custom key directions to support different locales. The order is up, down,
 left, right.
 -}
-directions : KeyCode -> KeyCode -> KeyCode -> KeyCode -> Signal { x:Int, y:Int }
-directions = Native.Keyboard.directions
+directions : KeyCode -> KeyCode -> KeyCode -> KeyCode -> Varying { x:Int, y:Int }
+directions =
+  Native.Keyboard.directions
+
 
 {-| A signal of records indicating which arrow keys are pressed.
 
@@ -46,43 +51,79 @@ directions = Native.Keyboard.directions
   * `{ x = 1, y = 1 }` when pressing the up and right arrows.
   * `{ x = 0, y =-1 }` when pressing the down, left, and right arrows.
 -}
-arrows : Signal { x:Int, y:Int }
-arrows = directions 38 40 37 39
+arrows : Varying { x:Int, y:Int }
+arrows =
+  directions 38 40 37 39
+
 
 {-| Just like the arrows signal, but this uses keys w, a, s, and d,
 which are common controls for many computer games.
 -}
-wasd : Signal { x:Int, y:Int }
-wasd = directions 87 83 65 68
+wasd : Varying { x:Int, y:Int }
+wasd =
+  directions 87 83 65 68
+
 
 {-| Whether an arbitrary key is pressed. -}
-isDown : KeyCode -> Signal Bool
-isDown = Native.Keyboard.isDown
+isDown : KeyCode -> Varying Bool
+isDown =
+  Native.Keyboard.isDown
 
-alt   : Signal Bool
-alt   = Native.Keyboard.alt
 
-ctrl  : Signal Bool
-ctrl  = isDown 17
+alt : Varying Bool
+alt =
+  Native.Keyboard.alt
+
+
+ctrl : Varying Bool
+ctrl =
+  isDown 17
+
 
 {-| The meta key is the Windows key on Windows and the Command key on Mac.
 -}
-meta  : Signal Bool
-meta  = Native.Keyboard.meta
+meta : Varying Bool
+meta =
+  Native.Keyboard.meta
 
-shift : Signal Bool
-shift = isDown 16
 
-space : Signal Bool
-space = isDown 32
+shift : Varying Bool
+shift =
+  isDown 16
 
-enter : Signal Bool
-enter = isDown 13
+
+space : Varying Bool
+space =
+  isDown 32
+
+
+enter : Varying Bool
+enter =
+  isDown 13
+
 
 {-| List of keys that are currently down. -}
-keysDown : Signal (List KeyCode)
-keysDown = Native.Keyboard.keysDown
+keysDown : Varying (List KeyCode)
+keysDown =
+  Native.Keyboard.keysDown
 
-{-| The latest key that has been pressed. -}
-lastPressed : Signal KeyCode
-lastPressed = Native.Keyboard.lastPressed
+
+{-| Event triggers on every key press. -}
+presses : Stream KeyCode
+presses =
+  Native.Keyboard.presses
+
+
+
+{-| Event triggers on every key down. -}
+downs : Stream KeyCode
+downs =
+  Native.Keyboard.downs
+
+
+
+{-| Event triggers on every key up. -}
+ups : Stream KeyCode
+ups =
+  Native.Keyboard.ups
+
