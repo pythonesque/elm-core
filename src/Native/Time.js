@@ -62,11 +62,6 @@ Elm.Native.Time.make = function(localRuntime) {
     }
 
 
-    function fps(t) {
-        return fpsWhen(t, Signal.constant(true));
-    }
-
-
     function every(t) {
       var ticker = NS.input(Utils.Tuple0);
       function tellTime() {
@@ -90,7 +85,6 @@ Elm.Native.Time.make = function(localRuntime) {
 
     return localRuntime.Native.Time.values = {
         fpsWhen: F2(fpsWhen),
-        fps: fps,
         every: every,
         delay: NS.delay,
         timestamp: NS.timestamp,
