@@ -52,7 +52,7 @@ type Signal a = Signal
 {-| Create a constant signal that never changes. -}
 constant : a -> Signal a
 constant =
-    Native.Signal.input
+    Native.Signal.input_
 
 
 {-| Apply a function to the current value of a signal.
@@ -301,7 +301,7 @@ and `(channel ())` produce two different channels.
 -}
 channel : a -> Channel a
 channel =
-    Native.Signal.input
+    Native.Signal.input_
 
 
 {-| Create a `Message` that can be sent to a `Channel` with a handler like

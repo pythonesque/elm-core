@@ -325,7 +325,7 @@ Elm.Native.Signal.make = function(localRuntime) {
         dropRepeats: dropRepeats,
         sampleOn: F2(sampleOn),
         timestamp: timestamp,
-        input: input,
+        input_: input,
         send: F2(send),
         subscribe: subscribe
     };
